@@ -4,6 +4,21 @@ metadata:
   name: github-runners
   namespace: actions-runner-system
 ---
+%{ if role != null ~}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: github-runners
+subjects:
+  - kind: ServiceAccount
+    name: github-runners
+    namespace: actions-runner-system
+roleRef:
+  kind: ClusterRole
+  name: ${role}
+  apiGroup: rbac.authorization.k8s.io
+---
+%{ endif ~}
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
@@ -14,7 +29,7 @@ spec:
     spec:
       serviceAccountName: github-runners
       organization: sparetimecoders
-      image: summerwind/actions-runner-dind:v2.299.1-ubuntu-20.04
+      image: ${runner_image}
       dockerdWithinRunnerContainer: true
       workDir: /home/runner/work
       ephemeral: true

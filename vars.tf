@@ -13,7 +13,10 @@ variable "github_runners_system" {
       client_secret : string
     }),
     runners = object({
+      cluster_role : optional(string),
+      image : optional(string),
       ssh_key : string,
+      buildtools_content : optional(string)
     }),
     webhook = object({
       secret : string
