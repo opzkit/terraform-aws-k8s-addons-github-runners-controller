@@ -20,11 +20,20 @@ output "addons" {
       version = local.version
     },
     {
-      name    = "actions-runner-system-runners"
-      content = file("${path.module}/manifests/runners.yaml")
+      name = "actions-runner-system-runners"
+      content = templatefile("${path.module}/manifests/runners.yaml",
+        {
+          "runner_image" : local.runner_image,
+          "role" : var.github_runners_system.runners.cluster_role
+        }
+      )
       version = local.version
     }
   ]
+}
+
+locals {
+  runner_image = var.github_runners_system.runners.image != null ? var.github_runners_system.runners.image : "summerwind/actions-runner-dind:v2.299.1-ubuntu-20.04"
 }
 
 output "permissions" {
