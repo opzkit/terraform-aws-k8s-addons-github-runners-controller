@@ -10,7 +10,7 @@ output "addons" {
       content = join("---\n",
         [
           file("${path.module}/manifests/namespace.yaml"),
-          templatefile("${path.module}/manifests/actions-runner-controller.yaml",
+          templatefile("${path.module}/manifests/actions-runner-controller.yaml.tftpl",
             {
               "webhook_host" : var.github_runners_system.webhook.host,
             }
@@ -21,7 +21,7 @@ output "addons" {
     },
     {
       name = "actions-runner-system-runners"
-      content = templatefile("${path.module}/manifests/runners.yaml",
+      content = templatefile("${path.module}/manifests/runners.yaml.tftpl",
         {
           "runner_image" : local.runner_image,
           "role" : var.github_runners_system.runners.cluster_role
