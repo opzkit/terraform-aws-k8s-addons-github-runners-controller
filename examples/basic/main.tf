@@ -21,4 +21,3 @@ module "github_runners" {
 output "yaml" {
   value = module.github_runners.addons
 }
-
