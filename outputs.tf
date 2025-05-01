@@ -3,7 +3,7 @@ output "addons" {
     {
       content = local.yaml
       version = local.version
-      name    = "github-runners"
+      name    = "github-runners-controller"
     }
   ]
 }
