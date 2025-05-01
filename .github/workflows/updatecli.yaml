@@ -1,0 +1,47 @@
+---
+name: Updatecli
+
+on:
+  # Trigger Updatecli if a new commit land on the main branch
+  push:
+    branches: [ main ]
+  # Manually trigger Updatecli via GitHub UI
+  workflow_dispatch:
+  # Trigger Updatecli once day by a cronjob
+  schedule:
+  # * is a special character in YAML, so you have to quote this string
+  # Run once a day
+  - cron: '0 0 * * *'
+
+permissions:
+  contents: "write"
+  pull-requests: "write"
+
+jobs:
+  updatecli:
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+    - name: Install Updatecli in the runner
+      uses: updatecli/updatecli-action@v2
+
+    - uses: azure/setup-kubectl@3e0aec4d80787158d308d7b364cb1b702e7feb7f # v4
+      id: kubectl
+
+    - uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
+      id: helm
+
+    - name: Get token
+      id: get_token
+      uses: actions/create-github-app-token@3ff1caaa28b64c9cc276ce0a02e2ff584f3900c5 # v2
+      with:
+        app-id: ${{ secrets.UPDATECLI_APP_ID }}
+        private-key: ${{ secrets.UPDATECLI_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+
+    - name: Run Updatecli in apply mode
+      run: "updatecli --experimental apply --config ./updatecli/updatecli.d --values updatecli/values.yaml --clean=true"
+      env:
+        UPDATECLI_GITHUB_TOKEN: '${{ steps.get_token.outputs.token }}'
