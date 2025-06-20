@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.0...v0.1.1) (2025-06-20)
+
+
+### Miscellaneous Chores
+
+* **deps:** update azure/setup-kubectl digest to 776406b ([#28](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/28)) ([99c6fa0](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/99c6fa0a40846e356317d3f7b96922eed7fed6ee))
+
 ## [0.1.0](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.0.1...v0.1.0) (2025-06-19)
 
 
