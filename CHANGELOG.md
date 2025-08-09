@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.1](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.0...v0.1.1) (2025-08-09)
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/create-github-app-token digest to 0f859bf ([#33](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/33)) ([6c11808](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/6c11808f43d99c417dae8ccb242d812c20ac2b75))
+* **deps:** update azure/setup-kubectl digest to 776406b ([#28](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/28)) ([99c6fa0](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/99c6fa0a40846e356317d3f7b96922eed7fed6ee))
+* **deps:** update gha-runner-scale-set-controller docker tag to v0.12.1 ([#30](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/30)) ([b4cdeab](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/b4cdeab213c94e28176c184cb81ac65dd8041e39))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.100.0 ([#32](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/32)) ([b3a0d33](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/b3a0d33d16b24d116e05ec2a30268d4190818376))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.99.5 ([#31](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/31)) ([1d88443](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/1d88443adebd86632ed1abb637e4cd1219e9a2b3))
+
 ## [0.1.0](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.0.1...v0.1.0) (2025-06-19)
 
 
