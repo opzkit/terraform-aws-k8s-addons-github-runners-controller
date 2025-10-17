@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.1...v0.1.2) (2025-10-17)
+
+
+### Miscellaneous Chores
+
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.103.0 ([#81](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/81)) ([06905e6](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/06905e6ddc977ca27b5b0355c3dd2de31057de2c))
+
 ## [0.1.1](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.0...v0.1.1) (2025-10-17)
 
 
