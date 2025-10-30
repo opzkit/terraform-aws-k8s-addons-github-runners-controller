@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.2](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.1...v0.1.2) (2025-10-30)
+
+
+### Miscellaneous Chores
+
+* **deps:** update googleapis/release-please-action digest to 16a9c90 ([#83](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/83)) ([c015982](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/c0159820fa9d5399eb23c3c3043072734922d0e0))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.103.0 ([#81](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/81)) ([06905e6](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/06905e6ddc977ca27b5b0355c3dd2de31057de2c))
+* **deps:** update terraform-linters/setup-tflint action to v6.2.1 ([#84](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/84)) ([097a21e](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/097a21ef43224fecc15f59b3a9fc464790286bac))
+
 ## [0.1.1](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.0...v0.1.1) (2025-10-17)
 
 
