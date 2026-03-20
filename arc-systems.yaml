@@ -7,7 +7,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
+    controller-gen.kubebuilder.io/version: v0.20.1
   name: autoscalinglisteners.actions.github.com
 spec:
   group: actions.github.com
@@ -60,6 +60,19 @@ spec:
               autoscalingRunnerSetNamespace:
                 description: Required
                 type: string
+              configSecretMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               ephemeralRunnerSetName:
                 description: Required
                 type: string
@@ -200,9 +213,48 @@ spec:
                       type: string
                     type: array
                 type: object
+              roleBindingMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              roleMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               runnerScaleSetId:
                 description: Required
                 type: integer
+              serviceAccountMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               template:
                 description: PodTemplateSpec describes the data a pod should have
                   when created from a template
@@ -2053,7 +2105,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -5276,7 +5330,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -6063,8 +6119,8 @@ spec:
                           will be made available to those containers which consume them
                           by name.
 
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
+                          This is a stable field but requires that the
+                          DynamicResourceAllocation feature gate is enabled.
 
                           This field is immutable.
                         items:
@@ -6523,9 +6579,10 @@ spec:
                             operator:
                               description: |-
                                 Operator represents a key's relationship to the value.
-                                Valid operators are Exists and Equal. Defaults to Equal.
+                                Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                                 Exists is equivalent to wildcard for value, so that a pod can
                                 tolerate all taints of a particular category.
+                                Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                               type: string
                             tolerationSeconds:
                               description: |-
@@ -7336,7 +7393,7 @@ spec:
                                         resources:
                                           description: |-
                                             resources represents the minimum resources the volume should have.
-                                            If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                                            Users are allowed to specify resource requirements
                                             that are lower than previous value but must still be higher than capacity recorded in the
                                             status field of the claim.
                                             More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -8222,6 +8279,24 @@ spec:
                                             description: Kubelet's generated CSRs
                                               will be addressed to this signer.
                                             type: string
+                                          userAnnotations:
+                                            additionalProperties:
+                                              type: string
+                                            description: |-
+                                              userAnnotations allow pod authors to pass additional information to
+                                              the signer implementation.  Kubernetes does not restrict or validate this
+                                              metadata in any way.
+
+                                              These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of
+                                              the PodCertificateRequest objects that Kubelet creates.
+
+                                              Entries are subject to the same validation as object metadata annotations,
+                                              with the addition that all keys must be domain-prefixed. No restrictions
+                                              are placed on values, except an overall size limitation on the entire field.
+
+                                              Signers should document the keys and values they support. Signers should
+                                              deny requests that contain keys they do not recognize.
+                                            type: object
                                         required:
                                         - keyType
                                         - signerName
@@ -8647,6 +8722,42 @@ spec:
                         x-kubernetes-list-map-keys:
                         - name
                         x-kubernetes-list-type: map
+                      workloadRef:
+                        description: |-
+                          WorkloadRef provides a reference to the Workload object that this Pod belongs to.
+                          This field is used by the scheduler to identify the PodGroup and apply the
+                          correct group scheduling policies. The Workload object referenced
+                          by this field may not exist at the time the Pod is created.
+                          This field is immutable, but a Workload object with the same name
+                          may be recreated with different policies. Doing this during pod scheduling
+                          may result in the placement not conforming to the expected policies.
+                        properties:
+                          name:
+                            description: |-
+                              Name defines the name of the Workload object this Pod belongs to.
+                              Workload must be in the same namespace as the Pod.
+                              If it doesn't match any existing Workload, the Pod will remain unschedulable
+                              until a Workload object is created and observed by the kube-scheduler.
+                              It must be a DNS subdomain.
+                            type: string
+                          podGroup:
+                            description: |-
+                              PodGroup is the name of the PodGroup within the Workload that this Pod
+                              belongs to. If it doesn't match any existing PodGroup within the Workload,
+                              the Pod will remain unschedulable until the Workload object is recreated
+                              and observed by the kube-scheduler. It must be a DNS label.
+                            type: string
+                          podGroupReplicaKey:
+                            description: |-
+                              PodGroupReplicaKey specifies the replica key of the PodGroup to which this
+                              Pod belongs. It is used to distinguish pods belonging to different replicas
+                              of the same pod group. The pod group policy is applied separately to each replica.
+                              When set, it must be a DNS label.
+                            type: string
+                        required:
+                        - name
+                        - podGroup
+                        type: object
                     required:
                     - containers
                     type: object
@@ -8712,7 +8823,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
+    controller-gen.kubebuilder.io/version: v0.20.1
   name: autoscalingrunnersets.actions.github.com
 spec:
   group: actions.github.com
@@ -8774,6 +8885,58 @@ spec:
           spec:
             description: AutoscalingRunnerSetSpec defines the desired state of AutoscalingRunnerSet
             properties:
+              autoscalingListener:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              ephemeralRunnerConfigSecretMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              ephemeralRunnerMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              ephemeralRunnerSetMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               githubConfigSecret:
                 description: Required
                 type: string
@@ -8808,6 +8971,19 @@ spec:
                         - key
                         type: object
                         x-kubernetes-map-type: atomic
+                    type: object
+                type: object
+              listenerConfigSecretMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
                     type: object
                 type: object
               listenerMetrics:
@@ -8856,6 +9032,45 @@ spec:
                       required:
                       - labels
                       type: object
+                    type: object
+                type: object
+              listenerRoleBindingMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              listenerRoleMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
+              listenerServiceAccountMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
                     type: object
                 type: object
               listenerTemplate:
@@ -10708,7 +10923,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -13931,7 +14148,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -14718,8 +14937,8 @@ spec:
                           will be made available to those containers which consume them
                           by name.
 
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
+                          This is a stable field but requires that the
+                          DynamicResourceAllocation feature gate is enabled.
 
                           This field is immutable.
                         items:
@@ -15178,9 +15397,10 @@ spec:
                             operator:
                               description: |-
                                 Operator represents a key's relationship to the value.
-                                Valid operators are Exists and Equal. Defaults to Equal.
+                                Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                                 Exists is equivalent to wildcard for value, so that a pod can
                                 tolerate all taints of a particular category.
+                                Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                               type: string
                             tolerationSeconds:
                               description: |-
@@ -15991,7 +16211,7 @@ spec:
                                         resources:
                                           description: |-
                                             resources represents the minimum resources the volume should have.
-                                            If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                                            Users are allowed to specify resource requirements
                                             that are lower than previous value but must still be higher than capacity recorded in the
                                             status field of the claim.
                                             More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -16877,6 +17097,24 @@ spec:
                                             description: Kubelet's generated CSRs
                                               will be addressed to this signer.
                                             type: string
+                                          userAnnotations:
+                                            additionalProperties:
+                                              type: string
+                                            description: |-
+                                              userAnnotations allow pod authors to pass additional information to
+                                              the signer implementation.  Kubernetes does not restrict or validate this
+                                              metadata in any way.
+
+                                              These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of
+                                              the PodCertificateRequest objects that Kubelet creates.
+
+                                              Entries are subject to the same validation as object metadata annotations,
+                                              with the addition that all keys must be domain-prefixed. No restrictions
+                                              are placed on values, except an overall size limitation on the entire field.
+
+                                              Signers should document the keys and values they support. Signers should
+                                              deny requests that contain keys they do not recognize.
+                                            type: object
                                         required:
                                         - keyType
                                         - signerName
@@ -17302,6 +17540,42 @@ spec:
                         x-kubernetes-list-map-keys:
                         - name
                         x-kubernetes-list-type: map
+                      workloadRef:
+                        description: |-
+                          WorkloadRef provides a reference to the Workload object that this Pod belongs to.
+                          This field is used by the scheduler to identify the PodGroup and apply the
+                          correct group scheduling policies. The Workload object referenced
+                          by this field may not exist at the time the Pod is created.
+                          This field is immutable, but a Workload object with the same name
+                          may be recreated with different policies. Doing this during pod scheduling
+                          may result in the placement not conforming to the expected policies.
+                        properties:
+                          name:
+                            description: |-
+                              Name defines the name of the Workload object this Pod belongs to.
+                              Workload must be in the same namespace as the Pod.
+                              If it doesn't match any existing Workload, the Pod will remain unschedulable
+                              until a Workload object is created and observed by the kube-scheduler.
+                              It must be a DNS subdomain.
+                            type: string
+                          podGroup:
+                            description: |-
+                              PodGroup is the name of the PodGroup within the Workload that this Pod
+                              belongs to. If it doesn't match any existing PodGroup within the Workload,
+                              the Pod will remain unschedulable until the Workload object is recreated
+                              and observed by the kube-scheduler. It must be a DNS label.
+                            type: string
+                          podGroupReplicaKey:
+                            description: |-
+                              PodGroupReplicaKey specifies the replica key of the PodGroup to which this
+                              Pod belongs. It is used to distinguish pods belonging to different replicas
+                              of the same pod group. The pod group policy is applied separately to each replica.
+                              When set, it must be a DNS label.
+                            type: string
+                        required:
+                        - name
+                        - podGroup
+                        type: object
                     required:
                     - containers
                     type: object
@@ -17337,6 +17611,10 @@ spec:
                 type: object
               runnerGroup:
                 type: string
+              runnerScaleSetLabels:
+                items:
+                  type: string
+                type: array
               runnerScaleSetName:
                 type: string
               template:
@@ -19188,7 +19466,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -22405,7 +22685,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -23189,8 +23471,8 @@ spec:
                           will be made available to those containers which consume them
                           by name.
 
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
+                          This is a stable field but requires that the
+                          DynamicResourceAllocation feature gate is enabled.
 
                           This field is immutable.
                         items:
@@ -23646,9 +23928,10 @@ spec:
                             operator:
                               description: |-
                                 Operator represents a key's relationship to the value.
-                                Valid operators are Exists and Equal. Defaults to Equal.
+                                Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                                 Exists is equivalent to wildcard for value, so that a pod can
                                 tolerate all taints of a particular category.
+                                Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                               type: string
                             tolerationSeconds:
                               description: |-
@@ -24459,7 +24742,7 @@ spec:
                                         resources:
                                           description: |-
                                             resources represents the minimum resources the volume should have.
-                                            If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                                            Users are allowed to specify resource requirements
                                             that are lower than previous value but must still be higher than capacity recorded in the
                                             status field of the claim.
                                             More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -25345,6 +25628,24 @@ spec:
                                             description: Kubelet's generated CSRs
                                               will be addressed to this signer.
                                             type: string
+                                          userAnnotations:
+                                            additionalProperties:
+                                              type: string
+                                            description: |-
+                                              userAnnotations allow pod authors to pass additional information to
+                                              the signer implementation.  Kubernetes does not restrict or validate this
+                                              metadata in any way.
+
+                                              These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of
+                                              the PodCertificateRequest objects that Kubelet creates.
+
+                                              Entries are subject to the same validation as object metadata annotations,
+                                              with the addition that all keys must be domain-prefixed. No restrictions
+                                              are placed on values, except an overall size limitation on the entire field.
+
+                                              Signers should document the keys and values they support. Signers should
+                                              deny requests that contain keys they do not recognize.
+                                            type: object
                                         required:
                                         - keyType
                                         - signerName
@@ -25770,6 +26071,42 @@ spec:
                         x-kubernetes-list-map-keys:
                         - name
                         x-kubernetes-list-type: map
+                      workloadRef:
+                        description: |-
+                          WorkloadRef provides a reference to the Workload object that this Pod belongs to.
+                          This field is used by the scheduler to identify the PodGroup and apply the
+                          correct group scheduling policies. The Workload object referenced
+                          by this field may not exist at the time the Pod is created.
+                          This field is immutable, but a Workload object with the same name
+                          may be recreated with different policies. Doing this during pod scheduling
+                          may result in the placement not conforming to the expected policies.
+                        properties:
+                          name:
+                            description: |-
+                              Name defines the name of the Workload object this Pod belongs to.
+                              Workload must be in the same namespace as the Pod.
+                              If it doesn't match any existing Workload, the Pod will remain unschedulable
+                              until a Workload object is created and observed by the kube-scheduler.
+                              It must be a DNS subdomain.
+                            type: string
+                          podGroup:
+                            description: |-
+                              PodGroup is the name of the PodGroup within the Workload that this Pod
+                              belongs to. If it doesn't match any existing PodGroup within the Workload,
+                              the Pod will remain unschedulable until the Workload object is recreated
+                              and observed by the kube-scheduler. It must be a DNS label.
+                            type: string
+                          podGroupReplicaKey:
+                            description: |-
+                              PodGroupReplicaKey specifies the replica key of the PodGroup to which this
+                              Pod belongs. It is used to distinguish pods belonging to different replicas
+                              of the same pod group. The pod group policy is applied separately to each replica.
+                              When set, it must be a DNS label.
+                            type: string
+                        required:
+                        - name
+                        - podGroup
+                        type: object
                     required:
                     - containers
                     type: object
@@ -25832,10 +26169,10 @@ spec:
                 type: integer
               pendingEphemeralRunners:
                 type: integer
+              phase:
+                type: string
               runningEphemeralRunners:
                 type: integer
-              state:
-                type: string
             type: object
         type: object
     served: true
@@ -25847,7 +26184,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
+    controller-gen.kubebuilder.io/version: v0.20.1
   name: ephemeralrunners.actions.github.com
 spec:
   group: actions.github.com
@@ -25914,6 +26251,19 @@ spec:
           spec:
             description: EphemeralRunnerSpec defines the desired state of EphemeralRunner
             properties:
+              ephemeralRunnerConfigSecretMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               githubConfigSecret:
                 type: string
               githubConfigUrl:
@@ -27811,7 +28161,9 @@ spec:
                               type: integer
                           type: object
                         resizePolicy:
-                          description: Resources resize policy for the container.
+                          description: |-
+                            Resources resize policy for the container.
+                            This field cannot be set on ephemeral containers.
                           items:
                             description: ContainerResizePolicy represents resource
                               resize policy for the container.
@@ -31014,7 +31366,9 @@ spec:
                               type: integer
                           type: object
                         resizePolicy:
-                          description: Resources resize policy for the container.
+                          description: |-
+                            Resources resize policy for the container.
+                            This field cannot be set on ephemeral containers.
                           items:
                             description: ContainerResizePolicy represents resource
                               resize policy for the container.
@@ -31797,8 +32151,8 @@ spec:
                       will be made available to those containers which consume them
                       by name.
 
-                      This is an alpha field and requires enabling the
-                      DynamicResourceAllocation feature gate.
+                      This is a stable field but requires that the
+                      DynamicResourceAllocation feature gate is enabled.
 
                       This field is immutable.
                     items:
@@ -32256,9 +32610,10 @@ spec:
                         operator:
                           description: |-
                             Operator represents a key's relationship to the value.
-                            Valid operators are Exists and Equal. Defaults to Equal.
+                            Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                             Exists is equivalent to wildcard for value, so that a pod can
                             tolerate all taints of a particular category.
+                            Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                           type: string
                         tolerationSeconds:
                           description: |-
@@ -33065,7 +33420,7 @@ spec:
                                     resources:
                                       description: |-
                                         resources represents the minimum resources the volume should have.
-                                        If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                                        Users are allowed to specify resource requirements
                                         that are lower than previous value but must still be higher than capacity recorded in the
                                         status field of the claim.
                                         More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -33946,6 +34301,24 @@ spec:
                                         description: Kubelet's generated CSRs will
                                           be addressed to this signer.
                                         type: string
+                                      userAnnotations:
+                                        additionalProperties:
+                                          type: string
+                                        description: |-
+                                          userAnnotations allow pod authors to pass additional information to
+                                          the signer implementation.  Kubernetes does not restrict or validate this
+                                          metadata in any way.
+
+                                          These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of
+                                          the PodCertificateRequest objects that Kubelet creates.
+
+                                          Entries are subject to the same validation as object metadata annotations,
+                                          with the addition that all keys must be domain-prefixed. No restrictions
+                                          are placed on values, except an overall size limitation on the entire field.
+
+                                          Signers should document the keys and values they support. Signers should
+                                          deny requests that contain keys they do not recognize.
+                                        type: object
                                     required:
                                     - keyType
                                     - signerName
@@ -34370,6 +34743,42 @@ spec:
                     x-kubernetes-list-map-keys:
                     - name
                     x-kubernetes-list-type: map
+                  workloadRef:
+                    description: |-
+                      WorkloadRef provides a reference to the Workload object that this Pod belongs to.
+                      This field is used by the scheduler to identify the PodGroup and apply the
+                      correct group scheduling policies. The Workload object referenced
+                      by this field may not exist at the time the Pod is created.
+                      This field is immutable, but a Workload object with the same name
+                      may be recreated with different policies. Doing this during pod scheduling
+                      may result in the placement not conforming to the expected policies.
+                    properties:
+                      name:
+                        description: |-
+                          Name defines the name of the Workload object this Pod belongs to.
+                          Workload must be in the same namespace as the Pod.
+                          If it doesn't match any existing Workload, the Pod will remain unschedulable
+                          until a Workload object is created and observed by the kube-scheduler.
+                          It must be a DNS subdomain.
+                        type: string
+                      podGroup:
+                        description: |-
+                          PodGroup is the name of the PodGroup within the Workload that this Pod
+                          belongs to. If it doesn't match any existing PodGroup within the Workload,
+                          the Pod will remain unschedulable until the Workload object is recreated
+                          and observed by the kube-scheduler. It must be a DNS label.
+                        type: string
+                      podGroupReplicaKey:
+                        description: |-
+                          PodGroupReplicaKey specifies the replica key of the PodGroup to which this
+                          Pod belongs. It is used to distinguish pods belonging to different replicas
+                          of the same pod group. The pod group policy is applied separately to each replica.
+                          When set, it must be a DNS label.
+                        type: string
+                    required:
+                    - name
+                    - podGroup
+                    type: object
                 required:
                 - containers
                 type: object
@@ -34481,7 +34890,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
+    controller-gen.kubebuilder.io/version: v0.20.1
   name: ephemeralrunnersets.actions.github.com
 spec:
   group: actions.github.com
@@ -34537,9 +34946,35 @@ spec:
           spec:
             description: EphemeralRunnerSetSpec defines the desired state of EphemeralRunnerSet
             properties:
+              ephemeralRunnerMetadata:
+                description: ResourceMeta carries metadata common to all internal
+                  resources
+                properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               ephemeralRunnerSpec:
                 description: EphemeralRunnerSpec is the spec of the ephemeral runner
                 properties:
+                  ephemeralRunnerConfigSecretMetadata:
+                    description: ResourceMeta carries metadata common to all internal
+                      resources
+                    properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      labels:
+                        additionalProperties:
+                          type: string
+                        type: object
+                    type: object
                   githubConfigSecret:
                     type: string
                   githubConfigUrl:
@@ -36447,7 +36882,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -39664,7 +40101,9 @@ spec:
                                   type: integer
                               type: object
                             resizePolicy:
-                              description: Resources resize policy for the container.
+                              description: |-
+                                Resources resize policy for the container.
+                                This field cannot be set on ephemeral containers.
                               items:
                                 description: ContainerResizePolicy represents resource
                                   resize policy for the container.
@@ -40448,8 +40887,8 @@ spec:
                           will be made available to those containers which consume them
                           by name.
 
-                          This is an alpha field and requires enabling the
-                          DynamicResourceAllocation feature gate.
+                          This is a stable field but requires that the
+                          DynamicResourceAllocation feature gate is enabled.
 
                           This field is immutable.
                         items:
@@ -40908,9 +41347,10 @@ spec:
                             operator:
                               description: |-
                                 Operator represents a key's relationship to the value.
-                                Valid operators are Exists and Equal. Defaults to Equal.
+                                Valid operators are Exists, Equal, Lt, and Gt. Defaults to Equal.
                                 Exists is equivalent to wildcard for value, so that a pod can
                                 tolerate all taints of a particular category.
+                                Lt and Gt perform numeric comparisons (requires feature gate TaintTolerationComparisonOperators).
                               type: string
                             tolerationSeconds:
                               description: |-
@@ -41721,7 +42161,7 @@ spec:
                                         resources:
                                           description: |-
                                             resources represents the minimum resources the volume should have.
-                                            If RecoverVolumeExpansionFailure feature is enabled users are allowed to specify resource requirements
+                                            Users are allowed to specify resource requirements
                                             that are lower than previous value but must still be higher than capacity recorded in the
                                             status field of the claim.
                                             More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -42607,6 +43047,24 @@ spec:
                                             description: Kubelet's generated CSRs
                                               will be addressed to this signer.
                                             type: string
+                                          userAnnotations:
+                                            additionalProperties:
+                                              type: string
+                                            description: |-
+                                              userAnnotations allow pod authors to pass additional information to
+                                              the signer implementation.  Kubernetes does not restrict or validate this
+                                              metadata in any way.
+
+                                              These values are copied verbatim into the `spec.unverifiedUserAnnotations` field of
+                                              the PodCertificateRequest objects that Kubelet creates.
+
+                                              Entries are subject to the same validation as object metadata annotations,
+                                              with the addition that all keys must be domain-prefixed. No restrictions
+                                              are placed on values, except an overall size limitation on the entire field.
+
+                                              Signers should document the keys and values they support. Signers should
+                                              deny requests that contain keys they do not recognize.
+                                            type: object
                                         required:
                                         - keyType
                                         - signerName
@@ -43032,6 +43490,42 @@ spec:
                         x-kubernetes-list-map-keys:
                         - name
                         x-kubernetes-list-type: map
+                      workloadRef:
+                        description: |-
+                          WorkloadRef provides a reference to the Workload object that this Pod belongs to.
+                          This field is used by the scheduler to identify the PodGroup and apply the
+                          correct group scheduling policies. The Workload object referenced
+                          by this field may not exist at the time the Pod is created.
+                          This field is immutable, but a Workload object with the same name
+                          may be recreated with different policies. Doing this during pod scheduling
+                          may result in the placement not conforming to the expected policies.
+                        properties:
+                          name:
+                            description: |-
+                              Name defines the name of the Workload object this Pod belongs to.
+                              Workload must be in the same namespace as the Pod.
+                              If it doesn't match any existing Workload, the Pod will remain unschedulable
+                              until a Workload object is created and observed by the kube-scheduler.
+                              It must be a DNS subdomain.
+                            type: string
+                          podGroup:
+                            description: |-
+                              PodGroup is the name of the PodGroup within the Workload that this Pod
+                              belongs to. If it doesn't match any existing PodGroup within the Workload,
+                              the Pod will remain unschedulable until the Workload object is recreated
+                              and observed by the kube-scheduler. It must be a DNS label.
+                            type: string
+                          podGroupReplicaKey:
+                            description: |-
+                              PodGroupReplicaKey specifies the replica key of the PodGroup to which this
+                              Pod belongs. It is used to distinguish pods belonging to different replicas
+                              of the same pod group. The pod group policy is applied separately to each replica.
+                              When set, it must be a DNS label.
+                            type: string
+                        required:
+                        - name
+                        - podGroup
+                        type: object
                     required:
                     - containers
                     type: object
@@ -43109,6 +43603,10 @@ spec:
                 type: integer
               pendingEphemeralRunners:
                 type: integer
+              phase:
+                description: EphemeralRunnerSetPhase is the phase of the ephemeral
+                  runner set resource
+                type: string
               runningEphemeralRunners:
                 type: integer
             required:
@@ -43129,9 +43627,9 @@ metadata:
     app.kubernetes.io/name: gha-rs-controller
     app.kubernetes.io/namespace: arc-systems
     app.kubernetes.io/part-of: gha-rs-controller
-    app.kubernetes.io/version: 0.13.0
+    app.kubernetes.io/version: 0.14.0
     controller.opzkit.io/version: ${version}
-    helm.sh/chart: gha-rs-controller-0.13.0
+    helm.sh/chart: gha-rs-controller-0.14.0
   name: arc-gha-rs-controller
   namespace: arc-systems
 ---
@@ -43357,9 +43855,9 @@ metadata:
     app.kubernetes.io/name: gha-rs-controller
     app.kubernetes.io/namespace: arc-systems
     app.kubernetes.io/part-of: gha-rs-controller
-    app.kubernetes.io/version: 0.13.0
+    app.kubernetes.io/version: 0.14.0
     controller.opzkit.io/version: ${version}
-    helm.sh/chart: gha-rs-controller-0.13.0
+    helm.sh/chart: gha-rs-controller-0.14.0
   name: arc-gha-rs-controller
   namespace: arc-systems
 spec:
@@ -43379,7 +43877,7 @@ spec:
         app.kubernetes.io/name: gha-rs-controller
         app.kubernetes.io/namespace: arc-systems
         app.kubernetes.io/part-of: gha-rs-controller
-        app.kubernetes.io/version: 0.13.0
+        app.kubernetes.io/version: 0.14.0
     spec:
       containers:
       - args:
@@ -43395,12 +43893,12 @@ spec:
         - /manager
         env:
         - name: CONTROLLER_MANAGER_CONTAINER_IMAGE
-          value: ghcr.io/actions/gha-runner-scale-set-controller:0.13.0
+          value: ghcr.io/actions/gha-runner-scale-set-controller:0.14.0
         - name: CONTROLLER_MANAGER_POD_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: ghcr.io/actions/gha-runner-scale-set-controller:0.13.0
+        image: ghcr.io/actions/gha-runner-scale-set-controller:0.14.0
         imagePullPolicy: IfNotPresent
         name: manager
         resources:
