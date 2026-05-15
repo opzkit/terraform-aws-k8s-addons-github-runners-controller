@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.5](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.4...v0.1.5) (2026-05-15)
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/create-github-app-token digest to bcd2ba4 ([#143](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/143)) ([fb9ee74](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/fb9ee748f6af8877c0f36303875044cd4c94c4d8))
+* **deps:** update googleapis/release-please-action action to v5 ([#140](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/140)) ([61b94bd](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/61b94bd7a2134c46812ed1f402db0cca8fd3fd3c))
+* **deps:** update hashicorp/setup-terraform action to v4.0.1 ([#144](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/144)) ([b414aca](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/b414acaea2f30f10f65ab2479082370446e05d6a))
+* **deps:** update pre-commit hook alessandrojcm/commitlint-pre-commit-hook to v9.25.0 ([#141](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/141)) ([4342b82](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/4342b821acdfa589af75c9555039f4439488f64b))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.126.0 ([#139](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/139)) ([3f6f055](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/3f6f05565a87553691fccac7e8bbe91d67ed4be3))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.150.0 ([#142](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/142)) ([3bf4cea](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/3bf4ceadf290365a33d325f1f513fc79bb398c61))
+* **deps:** update updatecli/updatecli-action action to v3 ([#137](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/137)) ([5195fea](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/5195feacb8ffb3f94274f09dc00959cc0abd16bd))
+
 ## [0.1.4](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.3...v0.1.4) (2026-04-16)
 
 
