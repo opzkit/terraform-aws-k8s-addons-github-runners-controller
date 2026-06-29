@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.1.6](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.5...v0.1.6) (2026-06-29)
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/checkout action to v6.0.3 ([#149](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/149)) ([f08a148](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/f08a148af19ab92f8e6627bd4e5a9a7494b2f81e))
+* **deps:** update actions/checkout action to v7 ([#155](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/155)) ([fc714de](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/fc714deb02abe470dc80c609c4247ababb8cc324))
+* **deps:** update actions/checkout digest to df4cb1c ([#148](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/148)) ([a77f703](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/a77f703ac8617cef55b76dbc7a02afe5d441cfe1))
+* **deps:** update actions/setup-python action to v6.3.0 ([#161](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/161)) ([dc9656f](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/dc9656f3253f314649a66a83ef1eef5abf177f56))
+* **deps:** update azure/setup-helm action to v5.0.1 ([#160](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/160)) ([963a2a7](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/963a2a7387ce6a2bc002f1d9714b6a201a5f56cb))
+* **deps:** update dependency helm to v3.21.0 ([#151](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/151)) ([d7073d9](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/d7073d9b6095bc85b4818b5d1d614653458376e5))
+* **deps:** update dependency helm to v4 ([#152](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/152)) ([794741c](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/794741c31b04ec68f8c496f8ef2a414a1da905a5))
+* **deps:** update dependency helm to v4.2.1 ([#154](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/154)) ([b17d9a5](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/b17d9a54c02db40fa05c3dc72cc1ac1e36391386))
+* **deps:** update dependency helm to v4.2.2 ([#156](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/156)) ([5be1ccc](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/5be1ccc9711b87349596346d1628f671b98b187a))
+* **deps:** update pre-commit hook alessandrojcm/commitlint-pre-commit-hook to v9.26.0 ([#162](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/162)) ([20b0f58](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/20b0f5852f467de8afddfcb7f9bcdbfa55634065))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.106.0 ([#146](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/146)) ([e1ece67](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/e1ece6708d3c1fa34823ba5f7a6a1f9a7596b2b5))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.107.0 ([#157](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/157)) ([608110c](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/608110c06a84f942fcfec0ff9391ace77d90265a))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.108.0 ([#159](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/159)) ([91b18c7](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/91b18c7e4e33e759333b861454031a53d7f426cc))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.212.4 ([#150](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/150)) ([2c7a0dc](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/2c7a0dc1b2d3767e4b584a16dee6e3814f642bb8))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.218.0 ([#153](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/153)) ([a5d1bd4](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/a5d1bd49059db7d6c09dc040b8b203eb81228454))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.227.0 ([#158](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/158)) ([eac2e92](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/eac2e922f756839e7286d7c5af311bf45463f0c9))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v43.243.2 ([#163](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/163)) ([e199465](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/e199465716092fedfbf3a00ae414aa5a28227723))
+
 ## [0.1.5](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.4...v0.1.5) (2026-05-23)
 
 
