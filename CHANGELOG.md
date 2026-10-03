@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.7](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.6...v0.1.7) (2026-10-03)
+
+
+### Miscellaneous Chores
+
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.109.2 ([#185](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/185)) ([e83f621](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/e83f621b752cdb9df82719a141bd6d63ee77ebb5))
+* **deps:** update terraform-linters/setup-tflint action to v6.3.2 ([#183](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/183)) ([0459d34](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/0459d342ba2875d3f74ac492e78cf020de5fde67))
+
 ## [0.1.6](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.5...v0.1.6) (2026-10-02)
 
 
