@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.7](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.6...v0.1.7) (2026-10-16)
+
+
+### Miscellaneous Chores
+
+* **deps:** update actions/create-github-app-token digest to 64ab729 ([#189](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/189)) ([0342a31](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/0342a3182b6124f4a980e20c719cbb9cb12d4250))
+* **deps:** update azure/setup-kubectl digest to bda439f ([#187](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/187)) ([aa8af5b](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/aa8af5b1fee063756e4869f9d3ed0b0ffda41dfb))
+* **deps:** update pre-commit hook antonbabenko/pre-commit-terraform to v1.109.2 ([#185](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/185)) ([e83f621](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/e83f621b752cdb9df82719a141bd6d63ee77ebb5))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v44.131.0 ([#186](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/186)) ([03076d5](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/03076d5a02ecc021871e849e7e001ef3cd60c84c))
+* **deps:** update pre-commit hook renovatebot/pre-commit-hooks to v44.148.3 ([#188](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/188)) ([8e0d8bc](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/8e0d8bc49bb0219fa1427d30e07683dffb6bd183))
+* **deps:** update terraform-linters/setup-tflint action to v6.3.2 ([#183](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/issues/183)) ([0459d34](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/commit/0459d342ba2875d3f74ac492e78cf020de5fde67))
+
 ## [0.1.6](https://github.com/opzkit/terraform-aws-k8s-addons-github-runners-controller/compare/v0.1.5...v0.1.6) (2026-10-02)
 
 
